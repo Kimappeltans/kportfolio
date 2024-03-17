@@ -1,220 +1,103 @@
-'use client';
-import React, { ReactNode, useState, useEffect } from "react";
-import { motion } from "framer-motion";
-import { cn } from "@/lib/utils";
-import { Collapse } from 'flowbite';
-import type { CollapseOptions, CollapseInterface } from 'flowbite';
-import type { InstanceOptions } from 'flowbite';
+import { useState } from "react";
 
-const transition = {
-  type: "spring",
-  mass: 0.5,
-  damping: 11.5,
-  stiffness: 100,
-  restDelta: 0.001,
-  restSpeed: 0.001,
-};
-
-type MenuItemType = "Home" | "About" | "Skills" | "Projects" | "More";
-
-interface MenuItemProps {
-  setActive: (item: MenuItemType | null) => void;
-  active: MenuItemType | null;
-  item: MenuItemType;
-  href: string;
-  className?: string; 
-}
-
-const MenuItem: React.FC<MenuItemProps> = ({ setActive, active, item, href,  className }) => {
-  const menuItemClasses = cn("relative bg-black");
+export default function MenuCustomAnimation() {
+  const [isNavOpen, setIsNavOpen] = useState(false);
 
   return (
-    <div onMouseEnter={() => setActive(item)} className={menuItemClasses}>
-      <a href={href} className={cn("cursor-pointer")}>
-        {item}
-      </a>
-      {active !== null && (
-        <motion.div
-          initial={{ opacity: 0, scale: 0.85, y: 10 }}
-          animate={{ opacity: 1, scale: 1, y: 0 }}
-          transition={transition}
-        >
-          {active === item && (
-            <div className={cn("absolute top-full left-1/2 transform -translate-x-1/2")}>
-              <motion.div
-                transition={transition}
-                layoutId="active"
-                className={cn(
-                  "bg-black backdrop-blur-sm rounded-2xl overflow-hidden border border-black-20 dark:border-white-20 shadow-xl"
-                )}
+    <div className="flex items-center justify-between">
+      
+      <nav>
+        <section className="MOBILE-MENU flex lg:hidden">
+          <div
+            className="HAMBURGER-ICON space-y-2"
+            onClick={() => setIsNavOpen((prev) => !prev)}
+          >
+            <span className="block h-0.5 w-8 animate-pulse bg-white"></span>
+            <span className="block h-0.5 w-8 animate-pulse bg-white"></span>
+            <span className="block h-0.5 w-8 animate-pulse bg-white"></span>
+          </div>
+
+          <div className={isNavOpen ? "showMenuNav" : "hideMenuNav"}>
+            <div
+              className="absolute top-0 right-0 px-8 py-8"
+              onClick={() => setIsNavOpen(false)}
+            >
+              <svg
+                className="h-8 w-8 text-gray-600"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
               >
-                <motion.div layout className={cn("w-max h-full p-4")} />
-              </motion.div>
+                <line x1="18" y1="6" x2="6" y2="18" />
+                <line x1="6" y1="6" x2="18" y2="18" />
+              </svg>
             </div>
-          )}
-        </motion.div>
-      )}
-    </div>
-  );
-};
+            <ul className="bg-black flex flex-col items-center justify-between min-h-[250px]">
+              <li className="border-b border-gray-400 my-8 uppercase">
+              <a href="#hero" className="menu-item" style={{ fontSize: '1.5rem' }}>Home</a>
+              </li>
+              <li className="border-b border-gray-400 my-8 uppercase">
+                <a href="#about" className="menu-item" style={{ fontSize: '1.5rem' }}>About</a>
+              </li>
+              <li className="border-b border-gray-400 my-8 uppercase">
+                <a href="#skills" className="menu-item" style={{ fontSize: '1.5rem' }}>Skills</a>
+              </li>
+              <li className="border-b border-gray-400 my-8 uppercase">
+                <a href="#projects" className="menu-item" style={{ fontSize: '1.5rem' }}>Projects</a>
+              </li>
+              <li className="border-b border-gray-400 my-8 uppercase">
+              <a href="#more" className="menu-item" style={{ fontSize: '1.5rem' }}>More</a>
+              </li>
+            </ul>
+          </div>
+        </section>
 
-interface HoveredLinkProps {
-  children: ReactNode;
-  href: string;
-}
-
-const HoveredLink: React.FC<HoveredLinkProps> = ({ children, href, ...rest }) => (
-  <a
-    href={href}
-    {...rest}
-    className={cn("text-xl uppercase font-bold dark:text-neutral-200 hover:text-blue-500 transition-colors")}
-  >
-    {children}
-  </a>
-);
-
-interface MenuProps {
-  setActive: (item: MenuItemType | null) => void;
-  children: ReactNode;
-}
-
-const Menu: React.FC<MenuProps> = ({ setActive, children }) => {
-  return (
-    <nav
-      onMouseLeave={() => setActive(null)}
-      className="relative dark:bg-black flex  justify-end items-start space-x-4 py-6 "
-    >
-      {children}
-    </nav>
-  );
-};
-
-interface NavbarProps {
-  className?: string;
-}
-
-const Navbar: React.FC<NavbarProps> = ({ className }) => {
-  const [active, setActive] = useState<MenuItemType | null>(null);
-  const [scrolled, setScrolled] = useState(false);
-  const [menuOpen, setMenuOpen] = useState(false);
-  const [isMobile, setIsMobile] = useState(false); // State to track if it's a mobile view
-
-  useEffect(() => {
-    const handleScroll = () => {
-      const isScrolled = window.scrollY > 50;
-      if (isScrolled !== scrolled) {
-        setScrolled(!scrolled);
+        <ul className="DESKTOP-MENU hidden space-x-8 lg:flex"> {/* Add flex-row-reverse class */}
+          <li>
+            <a href="#hero" className="menu-item">Home</a>
+          </li>
+          <li>
+            <a href="#about" className="menu-item">About</a>
+          </li>
+          <li>
+            <a href="#skills" className="menu-item">Skills</a>
+          </li>
+          <li>
+            <a href="#projects" className="menu-item">Projects</a>
+          </li>
+          <li>
+            <a href="#more" className="menu-item">More</a>
+          </li>
+        </ul>
+      </nav>
+      <style>{`
+      .hideMenuNav {
+        display: none;
       }
-    };
-    const handleResize = () => {
-      // Check if viewport width is less than a certain value to determine mobile view
-      setIsMobile(window.innerWidth < 768); // Example: Assume mobile if viewport width is less than 768px
-    };
-
-    document.addEventListener('scroll', handleScroll, { passive: true });
-    window.addEventListener('resize', handleResize); // Listen for window resize events
-    handleResize();
-
-    return () => {
-      // cleanup the event listener
-      document.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('resize', handleResize);
-
-    };
-  }, [scrolled]);
-  const toggleMenu = () => {
-    setMenuOpen(!menuOpen); // Toggle menu visibility
-  };
-  // Dynamically adjust menu item class based on mobile view
-  const menuItemClasses = cn("relative bg-black", {
-    "flex flex-col": isMobile, // If mobile view, show items in a column
-    "space-x-4": !isMobile, // If not mobile view, show items inline
-  });
-  return (
-    <div
-      className={cn(
-        "fixed top-0 inset-x-0 max-w-6xl mx-auto z-100 bg-black text-l uppercase text-white",
-        { 'scrolled': scrolled },
-        className
-      )}
-    >
-      {/* Hamburger Icon */}
-      <button
-  className="block p-2 text-white" // Removed md:hidden class
-  onClick={toggleMenu} // Toggle menu visibility
-  >
-{menuOpen ? (
-  <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
-    <path
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      strokeWidth={2}
-      d="M6 18L18 6M6 6l12 12"
-      />
-  </svg>
-  ) : (
-    <svg
-    xmlns="http://www.w3.org/2000/svg"
-    className="h-6 w-6"
-    fill="none"
-    viewBox="0 0 24 24"
-    stroke="currentColor"
-  >
- 
-  </svg>
-)} 
-</button>
-
-
-      {/* Menu */}
-      <div className={cn("overflow-hidden", { "h-auto": menuOpen })}>
-        <Menu setActive={(item: MenuItemType | null) => setActive(item)}>
-          <MenuItem
-          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-            setActive={setActive}
-            active={active}
-            item="Home"
-            href="#hero"
-          />
-          <MenuItem
-            className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-            setActive={setActive}
-            active={active}
-            item="About"
-            href="#about"
-          />
-          <MenuItem
-          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-            setActive={setActive}
-            active={active}
-            item="Skills"
-            href="#skills"
-          />
-          <MenuItem
-          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-            setActive={setActive}
-            active={active}
-            item="Projects"
-            href="#projects"
-          />
-          <MenuItem
-          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-            setActive={setActive}
-            active={active}
-            item="More"
-            href="#more"
-          />
-        </Menu>
-      </div>
+      .HAMBURGER-ICON{
+        position: fixed!important; /* or absolute, depending on your layout */
+        right: 40px!important;
+        top: 40px!important;
+      
+      }
+      .showMenuNav {
+        display: block;
+        position: absolute;
+        width: 100%;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        background: black;
+        z-index: 10;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        align-items: center;
+      }
+    `}</style>
     </div>
   );
-};
-
-export default Navbar;
-
+}

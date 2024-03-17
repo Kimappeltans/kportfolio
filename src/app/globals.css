@@ -27,10 +27,12 @@ body {
   height: 1px;
   background: white;
 }
-
+.hovered {
+  color: #8939FF; /* Change to the desired color */
+}
   .marquee-text {
     white-space: nowrap;
-    font-size: clamp(8rem, 22vw, 8rem);
+    font-size: clamp(4rem, 18vw, 4rem);
     line-height: 1;
     font-weight: 900;
     text-transform: uppercase;
@@ -41,10 +43,8 @@ body {
     font-family: 'PlayRegular';
     src: url('./Play-Regular.ttf') format('truetype');
   }
-.p-2{
-  padding: 0.1rem!important;
-}
-  .relative .bg-black{
+
+  .menu-item{
     font-size: clamp(1.2rem, 1vw, 1rem);
     line-height: 1;
     font-weight: 400;

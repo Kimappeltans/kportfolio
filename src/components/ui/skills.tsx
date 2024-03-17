@@ -1,22 +1,18 @@
 'use client' ;
-// Import React and other necessary dependencies
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { motion } from "framer-motion";
 
-// Initialize ScrollTrigger plugin
 gsap.registerPlugin(ScrollTrigger);
 
-// Define props for Heading component
 type HeadingProps = {
   size: string;
   className: string;
-  children: React.ReactNode; // Add 'children' prop type
+  children: React.ReactNode;
 };
 
-// Heading component
 const Heading: React.FC<HeadingProps> = ({ size, className, children }) => {
-  // You can now use 'size', 'className', and 'children' in your component
   return (
     <div className={className} style={{ fontSize: size }}>
       {children}
@@ -24,15 +20,16 @@ const Heading: React.FC<HeadingProps> = ({ size, className, children }) => {
   );
 };
 
-// Define props for Skills component
 interface SkillsProps {
   heading: string;
   skills: string[];
+  className: string; // Add this line
+
 }
 
-const Skills = ({ heading, skills }: SkillsProps): JSX.Element => {
+
+const Skills: React.FC<SkillsProps> = ({ heading, skills, className }) => {
   const animateText = useCallback(() => {
-    // Animation logic using GSAP
     skills.forEach((_, index) => {
       const marqueeText = document.getElementById(`marquee-text-${index}`);
       if (marqueeText) {
@@ -48,41 +45,44 @@ const Skills = ({ heading, skills }: SkillsProps): JSX.Element => {
         });
       }
     });
-  }, [skills]); // Trigger useCallback whenever any of the skills change
+  }, [skills]);
 
   useEffect(() => {
-    // Trigger GSAP animation after the component has been mounted and the content is loaded
     animateText();
-  }, [animateText]); // Trigger useEffect whenever animateText changes
+  }, [animateText]);
 
   return (
     <section>
-      {/* Render heading */}
-      <Heading className="3xl text-white" size={""}>
+      <h1 className={className}>
         {heading}
-      </Heading>
-
-      {/* Render each text row */}
+      </h1>
       {skills.map((text, index) => (
-        <div key={index} id={`marquee-text-${index}`} className="marquee-text">
+        <motion.div
+          key={index}
+          id={`marquee-text-${index}`}
+          className="marquee-text"
+          whileHover={{ color: '#8939FF' }}
+        >
           {text}
-        </div>
+        </motion.div>
       ))}
     </section>
   );
 };
 
-// Usage of Skills component
 const App = () => {
   return (
-    <Skills 
-      heading="My Heading" 
-      skills={[
-        "React-NODE-JAVASCRIPT-PHP-HTML-CSS", // row 1
-        "3D DESIGN-FIGMA-BLENDER-WIREFRAMING", // row 2
-        "SEO-SEM-SOCIAL MEDIA MARKETING-AI APPLICATIONS-SALESFORCE"  // row 3
-      ]}
-    />
+    <div>
+      <Skills
+        heading="Skills"
+        className="text-white mb-8 text-[clamp(0.5rem,10vmin,7rem)] font-extrabold"
+        skills={[
+          "React - NODE - JAVASCRIPT - PHP - HTML - CSS",
+          "3D DESIGN - FIGMA - BLENDER - WIREFRAMING",
+          "SEO - SEM - SOCIAL MEDIA MARKETING - AI APPLICATIONS"
+        ]}
+      />
+    </div>
   );
 };
 

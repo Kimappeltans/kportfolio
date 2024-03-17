@@ -43,7 +43,9 @@ export default function RootLayout({
             src="/mecopy.png"
             alt="Kim's avatar"
           />
+           <Skills />
           <Projects />
+         
         </div>
       </body>
     </html>
