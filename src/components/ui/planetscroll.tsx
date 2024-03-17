@@ -12,15 +12,11 @@ import * as THREE from 'three';
 const name = (type: string) => {
   switch (type) {
     case "Color":
-      return 'plutomap2k.jpg';
+      return 'plutomap4k.jpeg';
     case "Bump":
-      'plutobump2.jpg';
-
-
-   
+     return 'plutobump2.jpg';
     case "Normal":
-      return 'puto3.png';
-   
+      return 'pluto5.webp';
     default:
       return 'plutocolor.jpg';
   }
@@ -65,16 +61,17 @@ const Planet = ({ scrollPosition }: { scrollPosition: number }) => {
 
 
 const Scene = ({ scrollPosition }: { scrollPosition: number }) => {
-  const { camera } = useThree();
+  const { camera, size } = useThree();
   const lightRef = useRef<DirectionalLight> (null);
 
   useEffect(() => {
     if (camera instanceof THREE.PerspectiveCamera) {
-      camera.fov = 75;
+      camera.fov = 65;
+      camera.aspect = size.width / size.height; // Set the aspect ratio
       camera.updateProjectionMatrix();
     }
-    gsap.to(camera.position, { z: 300, duration: 2 });
-  }, [camera]);
+    gsap.to(camera.position, { z:410, duration: 2 });
+  }, [camera, size]); // Add size to the dependency array
 
   // Optional: Use a helper to visualize the light's position and effect
   // useHelper(lightRef, PointLightHelper, 1, 'hotpink');
@@ -108,7 +105,7 @@ const PlanetScroll = () => {
   }, []);
 
   return (
-    <div style={{ height: '250vh' }}>
+    <div style={{ height: '220vh' }}>
       <Canvas>
         <Scene scrollPosition={scrollPosition} />
       </Canvas>

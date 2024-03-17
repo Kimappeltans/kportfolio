@@ -2,6 +2,9 @@
 import React, { ReactNode, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
+import { Collapse } from 'flowbite';
+import type { CollapseOptions, CollapseInterface } from 'flowbite';
+import type { InstanceOptions } from 'flowbite';
 
 const transition = {
   type: "spring",
@@ -19,9 +22,10 @@ interface MenuItemProps {
   active: MenuItemType | null;
   item: MenuItemType;
   href: string;
+  className?: string; 
 }
 
-const MenuItem: React.FC<MenuItemProps> = ({ setActive, active, item, href }) => {
+const MenuItem: React.FC<MenuItemProps> = ({ setActive, active, item, href,  className }) => {
   const menuItemClasses = cn("relative bg-black");
 
   return (
@@ -78,7 +82,7 @@ const Menu: React.FC<MenuProps> = ({ setActive, children }) => {
   return (
     <nav
       onMouseLeave={() => setActive(null)}
-      className="relative  dark:bg-black flex  justify-end items-start space-x-4 py-6 "
+      className="relative dark:bg-black flex  justify-end items-start space-x-4 py-6 "
     >
       {children}
     </nav>
@@ -92,6 +96,8 @@ interface NavbarProps {
 const Navbar: React.FC<NavbarProps> = ({ className }) => {
   const [active, setActive] = useState<MenuItemType | null>(null);
   const [scrolled, setScrolled] = useState(false);
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [isMobile, setIsMobile] = useState(false); // State to track if it's a mobile view
 
   useEffect(() => {
     const handleScroll = () => {
@@ -100,57 +106,115 @@ const Navbar: React.FC<NavbarProps> = ({ className }) => {
         setScrolled(!scrolled);
       }
     };
+    const handleResize = () => {
+      // Check if viewport width is less than a certain value to determine mobile view
+      setIsMobile(window.innerWidth < 768); // Example: Assume mobile if viewport width is less than 768px
+    };
 
     document.addEventListener('scroll', handleScroll, { passive: true });
+    window.addEventListener('resize', handleResize); // Listen for window resize events
+    handleResize();
 
     return () => {
       // cleanup the event listener
       document.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', handleResize);
+
     };
   }, [scrolled]);
-
+  const toggleMenu = () => {
+    setMenuOpen(!menuOpen); // Toggle menu visibility
+  };
+  // Dynamically adjust menu item class based on mobile view
+  const menuItemClasses = cn("relative bg-black", {
+    "flex flex-col": isMobile, // If mobile view, show items in a column
+    "space-x-4": !isMobile, // If not mobile view, show items inline
+  });
   return (
     <div
       className={cn(
-        "fixed top-0 inset-x-0 max-w-2xl mx-auto z-50 bg-black text-l uppercase text-white",
+        "fixed top-0 inset-x-0 max-w-6xl mx-auto z-100 bg-black text-l uppercase text-white",
         { 'scrolled': scrolled },
         className
       )}
     >
-      <Menu setActive={(item: MenuItemType | null) => setActive(item)}>
-        <MenuItem
-          setActive={setActive}
-          active={active}
-          item="Home"
-          href="#hero"
-        />
-        <MenuItem
-          setActive={setActive}
-          active={active}
-          item="About"
-          href="#about"
-        />
-        <MenuItem
-          setActive={setActive}
-          active={active}
-          item="Skills"
-          href="#skills"
-        />
-        <MenuItem
-          setActive={setActive}
-          active={active}
-          item="Projects"
-          href="#projects"
-        />
-        <MenuItem
-          setActive={setActive}
-          active={active}
-          item="More"
-          href="#more"
-        />
-      </Menu>
+      {/* Hamburger Icon */}
+      <button
+  className="block p-2 text-white" // Removed md:hidden class
+  onClick={toggleMenu} // Toggle menu visibility
+  >
+{menuOpen ? (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+    <path
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      strokeWidth={2}
+      d="M6 18L18 6M6 6l12 12"
+      />
+  </svg>
+  ) : (
+    <svg
+    xmlns="http://www.w3.org/2000/svg"
+    className="h-6 w-6"
+    fill="none"
+    viewBox="0 0 24 24"
+    stroke="currentColor"
+  >
+ 
+  </svg>
+)} 
+</button>
+
+
+      {/* Menu */}
+      <div className={cn("overflow-hidden", { "h-auto": menuOpen })}>
+        <Menu setActive={(item: MenuItemType | null) => setActive(item)}>
+          <MenuItem
+          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+            setActive={setActive}
+            active={active}
+            item="Home"
+            href="#hero"
+          />
+          <MenuItem
+            className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+            setActive={setActive}
+            active={active}
+            item="About"
+            href="#about"
+          />
+          <MenuItem
+          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+            setActive={setActive}
+            active={active}
+            item="Skills"
+            href="#skills"
+          />
+          <MenuItem
+          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+            setActive={setActive}
+            active={active}
+            item="Projects"
+            href="#projects"
+          />
+          <MenuItem
+          className="flex flex-col font-medium mt-4 rounded-lg bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+            setActive={setActive}
+            active={active}
+            item="More"
+            href="#more"
+          />
+        </Menu>
+      </div>
     </div>
   );
 };
 
 export default Navbar;
+

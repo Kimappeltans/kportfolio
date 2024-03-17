@@ -43,8 +43,8 @@ const Hero = (): JSX.Element => {
   }, []); // Empty dependency array ensures it runs only once after initial render
 
   return (
-    <Bounded className="relative z-10" ref={component}>
-      <div className="grid min-h-[70vh] grid-cols-1 items-center md:grid-cols-2 relative z-10">
+    <Bounded className="relative" ref={component}>
+      <div className="grid min-h-[70vh] grid-cols-1 items-center md:grid-cols-2 relative">
         <canvas id="canvas3d" className="col-start-1 md:row-start-1" data-speed=".2"></canvas>
         <div className="col-start-1 md:row-start-1 " data-speed=".2">
           <h1

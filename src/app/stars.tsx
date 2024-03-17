@@ -1,23 +1,24 @@
 'use client';
+import './global.css'; // Import CSS file for styles
 
 import React, { useEffect } from 'react';
 
 const StarryBackground = () => {
-useEffect(() => {
+  useEffect(() => {
     const stars = document.getElementById('stars');
 
     if (stars !== null) {
-        for (let i = 0; i < 100; i++) {
-            const star = document.createElement('div');
-            star.className = 'star';
-            star.style.top = `${Math.random() * 100}%`;
-            star.style.left = `${Math.random() * 100}%`;
-            stars.appendChild(star);
-        }
+      for (let i = 0; i < 100; i++) {
+        const star = document.createElement('div');
+        star.className = 'star';
+        star.style.top = `${Math.random() * 100}vh`; // Adjusted to use vh units
+        star.style.left = `${Math.random() * 100}vw`; // Adjusted to use vw units
+        stars.appendChild(star);
+      }
     }
-}, []);
+  }, []);
 
-return <div id="stars" style={{ position: 'absolute', zIndex: -1, width: '100%', height: '100%' }} />
+  return <div id="stars" />;
 };
 
 export default StarryBackground;
